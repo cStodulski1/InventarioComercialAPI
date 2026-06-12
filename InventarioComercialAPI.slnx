@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="InventarioComercial.Application/InventarioComercial.Application.csproj" Id="35cb8c6f-6000-4e4c-9cb6-cc06abcb5b5a" />
+  <Project Path="InventarioComercial.Domain/InventarioComercial.Domain.csproj" />
+  <Project Path="InventarioComercial.Infrastructure/InventarioComercial.Infrastructure.csproj" Id="ccc62a31-ee27-4d6f-ae46-3b3357e81858" />
+  <Project Path="InventarioComercialAPI/InventarioComercial.API.csproj" />
+</Solution>
