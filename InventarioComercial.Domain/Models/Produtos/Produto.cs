@@ -1,4 +1,4 @@
-﻿using InventarioComercial.Domain.Categorias;
+﻿using InventarioComercial.Domain.Models.Categorias;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 using System.Text.Json.Serialization;
 
-namespace InventarioComercial.Domain.Produtos
+namespace InventarioComercial.Domain.Models.Produtos
 {
     public class Produto(Guid categoriaId, 
         string nome, string descricao, decimal preco)

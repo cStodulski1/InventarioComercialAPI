@@ -8,7 +8,16 @@
 
   <ItemGroup>
     <Folder Include="Common\Interfaces\" />
-    <Folder Include="Produtos\" />
+    <Folder Include="Produtos\GetProduto\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Mediator.Abstractions" Version="3.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\InventarioComercial.Domain\InventarioComercial.Domain.csproj" />
+    <ProjectReference Include="..\InventarioComercial.Infrastructure\InventarioComercial.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

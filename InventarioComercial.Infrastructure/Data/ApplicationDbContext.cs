@@ -1,5 +1,5 @@
-﻿using InventarioComercial.Domain.Categorias;
-using InventarioComercial.Domain.Produtos;
+﻿using InventarioComercial.Domain.Models.Categorias;
+using InventarioComercial.Domain.Models.Produtos;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

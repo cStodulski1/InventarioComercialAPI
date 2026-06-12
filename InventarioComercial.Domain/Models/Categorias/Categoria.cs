@@ -1,11 +1,11 @@
-﻿using InventarioComercial.Domain.Produtos;
+﻿using InventarioComercial.Domain.Models.Produtos;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
-namespace InventarioComercial.Domain.Categorias
+namespace InventarioComercial.Domain.Models.Categorias
 {
     [Table("Categorias")]
     public class Categoria(string descricao, string nome)
