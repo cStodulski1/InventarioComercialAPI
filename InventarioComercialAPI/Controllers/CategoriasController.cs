@@ -1,4 +1,5 @@
 ﻿using InventarioComercial.Application.Categorias;
+using InventarioComercial.Application.Categorias.DeleteCategoria;
 using InventarioComercial.Application.Categorias.GetCategoria;
 using InventarioComercial.Application.Categorias.PostCategoria;
 using InventarioComercial.Application.Categorias.PutCategoria;
@@ -17,7 +18,7 @@ namespace InventarioComercial.API.Controllers
         private readonly IMediator _mediator = mediator;
 
         [HttpGet]
-        public async Task<ActionResult<ResultData<PaginatedResponse<CategoriaDto>>>> GetCategorias(
+        public async Task<ActionResult<BaseResult>> GetCategorias(
             [FromQuery] int pageNumber = 1,
             [FromQuery] int pageSize = 10,
             [FromQuery] string? searchTerm = null,
@@ -60,6 +61,18 @@ namespace InventarioComercial.API.Controllers
                 return BadRequest(result.Message);
 
             return Ok(result);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<BaseResult>> DeleteCategoria(Guid id)
+        {
+            var command = new DeleteCategoriaRequest(id);
+            var result = await _mediator.Send(command);
+
+            if (!result.IsSuccess)
+                return BadRequest(result.Message);
+
+            return NoContent();
         }
     }
 }
