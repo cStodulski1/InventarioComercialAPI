@@ -6,7 +6,7 @@ using System.Text;
 
 namespace InventarioComercial.Application.Categorias.GetCategoria
 {
-    public record GetCategoriaRequest() : IRequest<PaginatedResponse<CategoriaDto>>
+    public record GetCategoriaRequest() : IRequest<ResultData<PaginatedResponse<CategoriaDto>>>
     {
         public int PageNumber { get; set; } = 1;
         public int PageSize { get; set; } = 10;

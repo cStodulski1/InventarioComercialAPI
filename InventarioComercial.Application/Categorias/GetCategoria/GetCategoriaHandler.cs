@@ -9,10 +9,10 @@ using System.Text;
 
 namespace InventarioComercial.Application.Categorias.GetCategoria
 {
-    public class GetCategoriaHandler(ApplicationDbContext dbContext) : IRequestHandler<GetCategoriaRequest, PaginatedResponse<CategoriaDto>>
+    public class GetCategoriaHandler(ApplicationDbContext dbContext) : IRequestHandler<GetCategoriaRequest, ResultData<PaginatedResponse<CategoriaDto>>>
     {
         private readonly ApplicationDbContext _dbContext = dbContext;
-        public async ValueTask<PaginatedResponse<CategoriaDto>> Handle(GetCategoriaRequest request, CancellationToken cancellationToken)
+        public async ValueTask<ResultData<PaginatedResponse<CategoriaDto>>> Handle(GetCategoriaRequest request, CancellationToken cancellationToken)
         {
             var query = _dbContext.Categorias
                 .Include(c => c.Produtos)
@@ -42,13 +42,16 @@ namespace InventarioComercial.Application.Categorias.GetCategoria
                 })
                 .ToListAsync(cancellationToken);
 
-            return new PaginatedResponse<CategoriaDto>
+            var listaDeCategorias = new PaginatedResponse<CategoriaDto>
             {
                 Items = items,
                 PageNumber = request.PageNumber,
                 PageSize = request.PageSize,
                 TotalCount = totalCount
             };
+
+            var result = ResultData<PaginatedResponse<CategoriaDto>>.Success(listaDeCategorias);
+            return result;
         }
 
         private IQueryable<Categoria> ApplyOrdering(
