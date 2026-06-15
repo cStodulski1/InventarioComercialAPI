@@ -1,4 +1,5 @@
 ﻿using InventarioComercial.Application.Common.Models;
+using InventarioComercial.Application.Produtos.DeleteProduto;
 using InventarioComercial.Application.Produtos.GetProduto;
 using InventarioComercial.Application.Produtos.PostProduto;
 using InventarioComercial.Application.Produtos.PutProduto;
@@ -58,6 +59,18 @@ namespace InventarioComercial.API.Controllers
                 return BadRequest(result.Message);
 
             return Ok(result);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<BaseResult>> DeleteProduto(Guid id)
+        {
+            var command = new DeleteProdutoRequest(id);
+            var result = await _mediator.Send(command);
+
+            if (!result.IsSuccess)
+                return BadRequest(result.Message);
+
+            return NoContent();
         }
     }
 }
