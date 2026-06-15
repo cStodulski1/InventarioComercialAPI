@@ -1,8 +1,12 @@
 ﻿using InventarioComercial.Application.Categorias;
+using InventarioComercial.Application.Categorias.DeleteCategoria;
 using InventarioComercial.Application.Categorias.GetCategoria;
+using InventarioComercial.Application.Categorias.PostCategoria;
+using InventarioComercial.Application.Categorias.PutCategoria;
 using InventarioComercial.Application.Common.Models;
 using Mediator;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InventarioComercial.API.Controllers
@@ -14,7 +18,7 @@ namespace InventarioComercial.API.Controllers
         private readonly IMediator _mediator = mediator;
 
         [HttpGet]
-        public async Task<ActionResult<PaginatedResponse<CategoriaDto>>> GetCategorias(
+        public async Task<ActionResult<BaseResult>> GetCategorias(
             [FromQuery] int pageNumber = 1,
             [FromQuery] int pageSize = 10,
             [FromQuery] string? searchTerm = null,
@@ -32,6 +36,43 @@ namespace InventarioComercial.API.Controllers
 
             var result = await _mediator.Send(query);
             return Ok(result);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<BaseResult>> PostCategoria(PostCategoriaRequest command)
+        {
+            var result = await _mediator.Send(command);
+
+            if (!result.IsSuccess)
+                return BadRequest(result.Message);
+
+            string uri = Request.GetDisplayUrl();
+
+            return Created(uri, result);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult<BaseResult>> PutCategoria(Guid id, [FromBody] PutCategoriaRequest command)
+        {
+            command.CategoriaId = id;
+            var result = await _mediator.Send(command);
+
+            if (!result.IsSuccess)
+                return BadRequest(result.Message);
+
+            return Ok(result);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<BaseResult>> DeleteCategoria(Guid id)
+        {
+            var command = new DeleteCategoriaRequest(id);
+            var result = await _mediator.Send(command);
+
+            if (!result.IsSuccess)
+                return BadRequest(result.Message);
+
+            return NoContent();
         }
     }
 }

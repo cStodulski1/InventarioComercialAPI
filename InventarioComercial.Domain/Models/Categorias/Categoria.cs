@@ -20,5 +20,11 @@ namespace InventarioComercial.Domain.Models.Categorias
         [MaxLength(500)]
         public string Descricao { get; private set; } = descricao;
         public List<Produto> Produtos { get; private set; } = [];
+
+        public void AtualizarCategoria(string nome, string descricao)
+        { 
+            Nome = nome;
+            Descricao = descricao;
+        }
     }
 }
