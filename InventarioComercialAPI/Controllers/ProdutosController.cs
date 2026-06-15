@@ -1,6 +1,7 @@
 ﻿using InventarioComercial.Application.Common.Models;
 using InventarioComercial.Application.Produtos.GetProduto;
 using InventarioComercial.Application.Produtos.PostProduto;
+using InventarioComercial.Application.Produtos.PutProduto;
 using Mediator;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
@@ -45,6 +46,18 @@ namespace InventarioComercial.API.Controllers
             string uri = Request.GetDisplayUrl();
 
             return Created(uri, result);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult<BaseResult>> PutProduto(Guid id, [FromBody]PutProdutoRequest command)
+        {
+            command.ProdutoId = id;
+            var result = await _mediator.Send(command);
+
+            if (!result.IsSuccess)
+                return BadRequest(result.Message);
+
+            return Ok(result);
         }
     }
 }
