@@ -1,5 +1,5 @@
 ﻿using InventarioComercial.Application.Common.Models;
-using InventarioComercial.Domain.Models.Categorias;
+using InventarioComercial.Domain.Models.Produtos;
 using InventarioComercial.Infrastructure.Data;
 using Mediator;
 using Microsoft.EntityFrameworkCore;
@@ -7,23 +7,25 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace InventarioComercial.Application.Categorias.GetCategoria
+namespace InventarioComercial.Application.Produtos.GetProduto
 {
-    public class GetCategoriaHandler(ApplicationDbContext dbContext) : IRequestHandler<GetCategoriaRequest, ResultData<PaginatedResponse<CategoriaDto>>>
+    public class GetProdutoHandler(ApplicationDbContext dbContext) : IRequestHandler<GetProdutoRequest, ResultData<PaginatedResponse<ProdutoDto>>>
     {
         private readonly ApplicationDbContext _dbContext = dbContext;
-        public async ValueTask<ResultData<PaginatedResponse<CategoriaDto>>> Handle(GetCategoriaRequest request, CancellationToken cancellationToken)
+        public async ValueTask<ResultData<PaginatedResponse<ProdutoDto>>> Handle(GetProdutoRequest request, CancellationToken cancellationToken)
         {
-            var query = _dbContext.Categorias
-                .Include(c => c.Produtos)
+            var query = _dbContext.Produtos
+                .Include(p => p.Categoria)
                 .AsNoTracking()
                 .AsQueryable();
 
-            if(!string.IsNullOrEmpty(request.SearchTerm))
+            if (!string.IsNullOrEmpty(request.SearchTerm))
             {
-                query = query.Where(c =>
-                    c.Nome.Contains(request.SearchTerm) ||
-                    (c.Descricao != null && c.Descricao.Contains(request.SearchTerm)));
+                query = query.Where(p =>
+                    p.Nome.Contains(request.SearchTerm) ||
+                    (p.Descricao != null && p.Descricao.Contains(request.SearchTerm)) ||
+                    (p.Categoria != null && p.Categoria.Nome.Contains(request.SearchTerm)) ||
+                    (p.Categoria != null && p.CategoriaId.ToString().Contains(request.SearchTerm)));
             }
 
             var totalCount = await query.CountAsync(cancellationToken);
@@ -33,10 +35,11 @@ namespace InventarioComercial.Application.Categorias.GetCategoria
             var items = await query
                 .Skip((request.PageNumber - 1) * request.PageSize)
                 .Take(request.PageSize)
-                .Select(c => new CategoriaDto(c.Id, c.Nome, c.Descricao, c.Produtos.Count()))
+                .Select(p => new ProdutoDto(p.Id, p.Nome, p.Descricao, p.Preco, p.CategoriaId, 
+                    p.Categoria != null ? p.Categoria.Nome : string.Empty))
                 .ToListAsync(cancellationToken);
 
-            var listaDeCategorias = new PaginatedResponse<CategoriaDto>
+            var listaDeProdutos = new PaginatedResponse<ProdutoDto>
             {
                 Items = items,
                 PageNumber = request.PageNumber,
@@ -44,11 +47,11 @@ namespace InventarioComercial.Application.Categorias.GetCategoria
                 TotalCount = totalCount
             };
 
-            return ResultData<PaginatedResponse<CategoriaDto>>.Success(listaDeCategorias);
+            return ResultData<PaginatedResponse<ProdutoDto>>.Success(listaDeProdutos);
         }
 
-        private IQueryable<Categoria> ApplyOrdering(
-            IQueryable<Categoria> query,
+        private IQueryable<Produto> ApplyOrdering(
+            IQueryable<Produto> query,
             string orderBy,
             bool descending)
         {
@@ -56,7 +59,6 @@ namespace InventarioComercial.Application.Categorias.GetCategoria
             {
                 "nome" => descending ? query.OrderByDescending(c => c.Nome) : query.OrderBy(c => c.Nome),
                 "descricao" => descending ? query.OrderByDescending(c => c.Descricao) : query.OrderBy(c => c.Descricao),
-                "produtosCount" => descending ? query.OrderByDescending(c => c.Produtos.Count) : query.OrderBy(c => c.Produtos.Count),
                 _ => query.OrderBy(c => c.Nome)
             };
         }

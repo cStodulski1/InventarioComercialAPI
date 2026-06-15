@@ -6,7 +6,7 @@ using System.Text;
 
 namespace InventarioComercial.Application.Categorias.PutCategoria
 {
-    public class PutCategoriaRequest() : IRequest<ResultData<CategoriaDto>>
+    public record PutCategoriaRequest() : IRequest<ResultData<CategoriaDto>>
     {
         public Guid CategoriaId { get; set; }
         public string Nome { get; set; } = string.Empty;
