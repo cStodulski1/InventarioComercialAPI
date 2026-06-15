@@ -10,10 +10,4 @@ namespace InventarioComercial.Application.Categorias
         string Descricao,
         int QuantidadeDeProdutos
     );
-    //{
-    //    public Guid Id {  get; set; }
-    //    public string Nome { get; set; } = string.Empty;
-    //    public string Descricao { get; set; } = string.Empty;
-    //    public int QuantidadeDeProdutos { get; set; } = 0;
-    //}
 }
