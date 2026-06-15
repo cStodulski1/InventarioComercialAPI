@@ -33,13 +33,7 @@ namespace InventarioComercial.Application.Categorias.GetCategoria
             var items = await query
                 .Skip((request.PageNumber - 1) * request.PageSize)
                 .Take(request.PageSize)
-                .Select(c => new CategoriaDto
-                {
-                    Id = c.Id,
-                    Nome = c.Nome,
-                    Descricao = c.Descricao,
-                    QuantidadeDeProdutos = c.Produtos.Count()
-                })
+                .Select(c => new CategoriaDto(c.Id, c.Nome, c.Descricao, c.Produtos.Count()))
                 .ToListAsync(cancellationToken);
 
             var listaDeCategorias = new PaginatedResponse<CategoriaDto>

@@ -26,7 +26,7 @@ namespace InventarioComercial.Application.Categorias.PutCategoria
                 return badRequest;
             }
 
-            var query = _dbContext.Categorias.AsQueryable();
+            var query = _dbContext.Categorias.Include(c => c.Produtos).AsQueryable();
             var categoria = await query.FirstOrDefaultAsync(c => c.Id == request.CategoriaId, cancellationToken);
 
             if(categoria == null )
@@ -35,13 +35,10 @@ namespace InventarioComercial.Application.Categorias.PutCategoria
                 return badRequest;
             }
 
+            int qntProdutos = categoria.Produtos.Count;
+
             categoria.AtualizarCategoria(request.Nome.Trim(), request.Descricao.Trim());
-            var categoriaAtualizada = new CategoriaDto
-            {
-                Id = categoria.Id,
-                Nome = categoria.Nome,
-                Descricao = categoria.Descricao
-            };
+            var categoriaAtualizada = new CategoriaDto(categoria.Id, categoria.Nome, categoria.Descricao, qntProdutos);
 
             _dbContext.Categorias.Update(categoria);
             await _dbContext.SaveChangesAsync(cancellationToken);

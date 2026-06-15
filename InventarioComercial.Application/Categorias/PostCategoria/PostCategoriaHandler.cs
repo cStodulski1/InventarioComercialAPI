@@ -39,13 +39,7 @@ namespace InventarioComercial.Application.Categorias.PostCategoria
             _dbContext.Categorias.Add(categoria);
             await _dbContext.SaveChangesAsync(cancellationToken);
 
-            var categoriaCriadaDto = new CategoriaDto
-            {
-                Id = categoria.Id,
-                Nome = categoria.Nome,
-                Descricao = categoria.Descricao,
-                QuantidadeDeProdutos = 0
-            };
+            var categoriaCriadaDto = new CategoriaDto(categoria.Id, categoria.Nome, categoria.Descricao, 0);
 
             var result = ResultData<CategoriaDto>.Success(categoriaCriadaDto);
 
