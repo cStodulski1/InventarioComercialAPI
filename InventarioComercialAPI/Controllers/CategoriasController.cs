@@ -1,6 +1,7 @@
 ﻿using InventarioComercial.Application.Categorias;
 using InventarioComercial.Application.Categorias.GetCategoria;
 using InventarioComercial.Application.Categorias.PostCategoria;
+using InventarioComercial.Application.Categorias.PutCategoria;
 using InventarioComercial.Application.Common.Models;
 using Mediator;
 using Microsoft.AspNetCore.Http;
@@ -37,16 +38,28 @@ namespace InventarioComercial.API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<BaseResult>> PostCategoria (PostCategoriaRequest command)
+        public async Task<ActionResult<BaseResult>> PostCategoria(PostCategoriaRequest command)
         {
             var result = await _mediator.Send(command);
 
-            if(!result.IsSuccess)
+            if (!result.IsSuccess)
                 return BadRequest(result.Message);
 
             string uri = Request.GetDisplayUrl();
 
             return Created(uri, result);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult<BaseResult>> PutCategoria(Guid id, [FromBody] PutCategoriaRequest command)
+        {
+            command.CategoriaId = id;
+            var result = await _mediator.Send(command);
+
+            if (!result.IsSuccess)
+                return BadRequest(result.Message);
+
+            return Ok(result);
         }
     }
 }
