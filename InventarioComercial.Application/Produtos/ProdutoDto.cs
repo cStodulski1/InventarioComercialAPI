@@ -1,4 +1,5 @@
-﻿using System;
+﻿using InventarioComercial.Application.Categorias;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -10,6 +11,6 @@ namespace InventarioComercial.Application.Produtos
         string Descricao,
         decimal Preco,
         Guid CategoriaId,
-        string CategoriaNome
+        CategoriaDto? CategoriaDto
     );
 }

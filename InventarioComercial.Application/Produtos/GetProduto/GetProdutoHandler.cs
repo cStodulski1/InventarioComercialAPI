@@ -1,4 +1,5 @@
 ﻿using InventarioComercial.Application.Common.Models;
+using InventarioComercial.Domain.Models.Categorias;
 using InventarioComercial.Domain.Models.Produtos;
 using InventarioComercial.Infrastructure.Data;
 using Mediator;
@@ -36,7 +37,8 @@ namespace InventarioComercial.Application.Produtos.GetProduto
                 .Skip((request.PageNumber - 1) * request.PageSize)
                 .Take(request.PageSize)
                 .Select(p => new ProdutoDto(p.Id, p.Nome, p.Descricao, p.Preco, p.CategoriaId, 
-                    p.Categoria != null ? p.Categoria.Nome : string.Empty))
+                    new Categorias.CategoriaDto(p.CategoriaId, p.Categoria.Nome, p.Categoria.Descricao, p.Categoria.Produtos.Count)
+                ))
                 .ToListAsync(cancellationToken);
 
             var listaDeProdutos = new PaginatedResponse<ProdutoDto>

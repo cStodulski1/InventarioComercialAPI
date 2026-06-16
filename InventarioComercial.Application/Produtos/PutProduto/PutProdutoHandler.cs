@@ -1,4 +1,5 @@
-﻿using InventarioComercial.Application.Common.Models;
+﻿using InventarioComercial.Application.Categorias;
+using InventarioComercial.Application.Common.Models;
 using InventarioComercial.Infrastructure.Data;
 using Mediator;
 using Microsoft.EntityFrameworkCore;
@@ -37,6 +38,8 @@ namespace InventarioComercial.Application.Produtos.PutProduto
             bool deveAlterarCategoriaId = request.CategoriaId != Guid.Empty;
             Guid categoriaId = deveAlterarCategoriaId ? request.CategoriaId : produto.CategoriaId;
 
+            //ajustar para receber categoriaDto
+
             produto.AtualizarProduto(request.Nome, request.Descricao, request.Preco, categoriaId);
             var produtoAtualizado = new ProdutoDto(
                 produto.Id,
@@ -44,7 +47,8 @@ namespace InventarioComercial.Application.Produtos.PutProduto
                 produto.Descricao,
                 produto.Preco,
                 produto.CategoriaId,
-                produto.Categoria != null ? produto.Categoria.Nome : string.Empty);
+                new CategoriaDto(produto.CategoriaId, produto.Categoria.Nome, produto.Categoria.Descricao, produto.Categoria.Produtos.Count)
+                );
 
             _dbContext.Produtos.Update(produto);
             await _dbContext.SaveChangesAsync(cancellationToken);

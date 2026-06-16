@@ -45,7 +45,8 @@ namespace InventarioComercial.Application.Produtos.PostProduto
             _dbContext.Produtos.Add(produto);
             await _dbContext.SaveChangesAsync(cancellationToken);
 
-            var produtoDto = new ProdutoDto(produto.Id, produto.Nome, produto.Descricao, produto.Preco, categoria.Id, categoria.Nome);
+            var produtoDto = new ProdutoDto(produto.Id, produto.Nome, produto.Descricao, produto.Preco, categoria.Id,
+                new CategoriaDto(produto.CategoriaId, produto.Categoria.Nome, produto.Categoria.Descricao, produto.Categoria.Produtos.Count));
 
             return ResultData<ProdutoDto>.Success(produtoDto);
         }
