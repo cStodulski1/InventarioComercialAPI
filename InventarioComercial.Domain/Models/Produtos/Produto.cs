@@ -30,5 +30,13 @@ namespace InventarioComercial.Domain.Models.Produtos
 
         [JsonIgnore]
         public Categoria? Categoria { get; private set; }
+
+        public void AtualizarProduto(string nome, string descricao, decimal preco, Guid categoriaId)
+        {
+            Nome = nome;
+            Descricao = descricao;
+            Preco = preco;
+            CategoriaId = categoriaId;
+        }
     }
 }

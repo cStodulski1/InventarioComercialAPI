@@ -4,12 +4,13 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace InventarioComercial.Application.Categorias.PutCategoria
+namespace InventarioComercial.Application.Produtos.PostProduto
 {
-    public record PutCategoriaRequest() : IRequest<ResultData<CategoriaDto>>
+    public record PostProdutoRequest() : IRequest<ResultData<ProdutoDto>>
     {
-        public Guid CategoriaId { get; set; }
         public string Nome { get; set; } = string.Empty;
         public string Descricao { get; set; } = string.Empty;
+        public decimal Preco { get; set; }
+        public Guid CategoriaId { get; set; }
     }
 }
