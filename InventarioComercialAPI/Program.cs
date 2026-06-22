@@ -19,6 +19,17 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
             .EnableRetryOnFailure(3)
     ));
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("NuxtApp", policy =>
+    {
+        policy.WithOrigins("http://localhost:3000")
+              .AllowAnyMethod()
+              .AllowAnyHeader()
+              .AllowCredentials();
+    });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -27,8 +38,11 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
+
 app.UseHttpsRedirection();
 
+app.UseRouting();
+app.UseCors("NuxtApp");
 app.UseAuthorization();
 
 app.MapControllers();
