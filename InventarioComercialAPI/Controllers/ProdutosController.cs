@@ -1,4 +1,5 @@
 ﻿using InventarioComercial.Application.Common.Models;
+using InventarioComercial.Application.Produtos;
 using InventarioComercial.Application.Produtos.DeleteProduto;
 using InventarioComercial.Application.Produtos.GetProduto;
 using InventarioComercial.Application.Produtos.PostProduto;
@@ -16,7 +17,7 @@ namespace InventarioComercial.API.Controllers
         private readonly IMediator _mediator = mediator;
 
         [HttpGet]
-        public async Task<ActionResult<BaseResult>> GetProdutos(
+        public async Task<ActionResult<PaginatedResponse<ProdutoDto>>> GetProdutos(
             [FromQuery] int pageNumber = 1,
             [FromQuery] int pageSize = 10,
             [FromQuery] string? searchTerm = null,
@@ -37,7 +38,7 @@ namespace InventarioComercial.API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<BaseResult>> PostProduto(PostProdutoRequest command)
+        public async Task<ActionResult<ResultData<ProdutoDto>>> PostProduto(PostProdutoRequest command)
         {
             var result = await _mediator.Send(command);
 
@@ -50,7 +51,7 @@ namespace InventarioComercial.API.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<BaseResult>> PutProduto(Guid id, [FromBody]PutProdutoRequest command)
+        public async Task<ActionResult<ResultData<ProdutoDto>>> PutProduto(Guid id, [FromBody]PutProdutoRequest command)
         {
             command.ProdutoId = id;
             var result = await _mediator.Send(command);
@@ -62,7 +63,7 @@ namespace InventarioComercial.API.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult<BaseResult>> DeleteProduto(Guid id)
+        public async Task<ActionResult<ResultData<bool>>> DeleteProduto(Guid id)
         {
             var command = new DeleteProdutoRequest(id);
             var result = await _mediator.Send(command);

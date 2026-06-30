@@ -5,8 +5,6 @@ using InventarioComercial.Application.Categorias.PostCategoria;
 using InventarioComercial.Application.Categorias.PutCategoria;
 using InventarioComercial.Application.Common.Models;
 using Mediator;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InventarioComercial.API.Controllers
@@ -16,9 +14,9 @@ namespace InventarioComercial.API.Controllers
     public class CategoriasController(IMediator mediator) : ControllerBase
     {
         private readonly IMediator _mediator = mediator;
-
+        // setar as responses pra serem especificas na controller
         [HttpGet]
-        public async Task<ActionResult<BaseResult>> GetCategorias(
+        public async Task<ActionResult<ResultData<PaginatedResponse<CategoriaDto>>>> GetCategorias(
             [FromQuery] int pageNumber = 1,
             [FromQuery] int pageSize = 10,
             [FromQuery] string? searchTerm = null,
@@ -39,38 +37,36 @@ namespace InventarioComercial.API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<BaseResult>> PostCategoria(PostCategoriaRequest command)
+        public async Task<ActionResult<ResultData<CategoriaDto>>> PostCategoria(PostCategoriaRequest command)
         {
             var result = await _mediator.Send(command);
 
             if (!result.IsSuccess)
-                return BadRequest(result.Message);
+                return BadRequest(result);
 
-            string uri = Request.GetDisplayUrl();
-
-            return Created(uri, result);
+            return CreatedAtAction(nameof(PostCategoria), result);
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<BaseResult>> PutCategoria(Guid id, [FromBody] PutCategoriaRequest command)
+        public async Task<ActionResult<ResultData<CategoriaDto>>> PutCategoria(Guid id, [FromBody] PutCategoriaRequest command)
         {
             command.CategoriaId = id;
             var result = await _mediator.Send(command);
 
             if (!result.IsSuccess)
-                return BadRequest(result.Message);
+                return BadRequest(result);
 
             return Ok(result);
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult<BaseResult>> DeleteCategoria(Guid id)
+        public async Task<ActionResult<ResultData<bool>>> DeleteCategoria(Guid id)
         {
             var command = new DeleteCategoriaRequest(id);
             var result = await _mediator.Send(command);
 
             if (!result.IsSuccess)
-                return BadRequest(result.Message);
+                return BadRequest(result);
 
             return NoContent();
         }
